@@ -218,6 +218,31 @@ btnClose.addEventListener('click', function (e) {
   inputCloseUsername.value = inputClosePin.value = '';
 });
 
+//requesting loan to bank
+btnLoan.addEventListener('click',function(e)
+{
+  e.preventDefault('');
+  const amount=Number(inputLoanAmount.value);
+
+  if(amount>0 && currentaccount.movements.some(mov=>mov>=amount*0.1))
+  {
+    // add movement
+    currentaccount.movements.push(amount);
+    //update UI
+
+    //display movements
+    displayMovements(currentaccount.movements);
+
+
+    //display balance
+    calcDisplayBalance(currentaccount);
+
+    //displaying summary
+    // calcdisplaysummary(currentaccount.movements);
+    calcDisplayBalance(currentaccount);
+  }
+});
+
 
 
 
