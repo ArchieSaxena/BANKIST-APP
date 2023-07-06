@@ -79,7 +79,7 @@ const displayMovements=function(movements)
 
   });
 };
-displayMovements(account1.movements);
+// displayMovements(account1.movements);
 // console.log(containerMovements.innerHTML);
 
 
@@ -109,9 +109,43 @@ const calcprintbalance=function(movements)
   const balance=movements.reduce((acc,mov)=>acc+mov,0);
   labelBalance.textContent=`${balance} EUR`;
 }
-calcprintbalance(account1.movements);
+// calcprintbalance(account1.movements);
 
-hvhbbkmmkmkm
+
+let currentaccount;
+btnLogin.addEventListener('click',function(e)
+{
+  e.preventDefault();
+
+  currentaccount=accounts.find(acc=>acc.username===inputLoginUsername.value);
+  console.log(currentaccount);
+
+  if(currentaccount.pin===Number(inputLoginPin.value))
+  {
+    console.log('LOGIN');
+
+    //displaying UI and message
+    labelWelcome.textContent=`Welcome back, ${currentaccount.owner.split(' ')[0]}`;
+    containerApp.style.opacity=100;
+
+    inputLoginUsername=inputLoginPin='';
+    inputLoginPin.blur();
+
+    //display movements
+    displayMovements(currentaccount.movements);
+
+
+    //display balance
+    calcprintbalance(currentaccount.movements);
+
+    //displaying summary
+    // calcdisplaysummary(currentaccount.movements);
+    calcprintbalance(currentaccount.movements);
+  }
+
+
+});
+
 
 
 
