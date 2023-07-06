@@ -104,11 +104,10 @@ console.log(accounts);
 
 
 
-const calcprintbalance=function(movements)
-{
-  const balance=movements.reduce((acc,mov)=>acc+mov,0);
-  labelBalance.textContent=`${balance} €`;
-}
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${acc.balance}€`;
+};
 // calcprintbalance(account1.movements);
 
 
@@ -133,10 +132,6 @@ const calcdisplaysummary=function(movements)
 
 calcdisplaysummary(account1.movements);
 
-
-
-
-
 let currentaccount;
 btnLogin.addEventListener('click',function(e)
 {
@@ -153,7 +148,7 @@ btnLogin.addEventListener('click',function(e)
     labelWelcome.textContent=`Welcome back, ${currentaccount.owner.split(' ')[0]}`;
     containerApp.style.opacity=100;
 
-    inputLoginUsername=inputLoginPin='';
+    // inputLoginUsername=inputLoginPin='';
     inputLoginPin.blur();
 
     //display movements
@@ -161,23 +156,44 @@ btnLogin.addEventListener('click',function(e)
 
 
     //display balance
-    calcprintbalance(currentaccount.movements);
+    calcDisplayBalance(currentaccount);
 
     //displaying summary
     // calcdisplaysummary(currentaccount.movements);
-    calcprintbalance(currentaccount.movements);
+    calcDisplayBalance(currentaccount);
   }
 
 
 });
 
 
+btnTransfer.addEventListener('click',function(e)
+{
+  e.preventDefault();
+  const amount=Number(inputTransferAmount.value);
+  const recieveraccount=accounts.find(acc=>acc.username===inputTransferTo.value);
+  console.log(amount,recieveraccount);
+
+  inputTransferTo.value=inputTransferTo.value=' ';
+  if(amount>0 && currentaccount.balance>=amount && recieveraccount?.username !== currentaccount.username)
+  {
+    console.log('transfer valid');
+    currentaccount.movements.push(-amount);
+    recieveraccount.movements.push(amount);
+
+        //display movements
+        displayMovements(currentaccount.movements);
 
 
+        //display balance
+        calcDisplayBalance(currentaccount);
+    
+        //displaying summary
+        // calcdisplaysummary(currentaccount.movements);
+        calcDisplayBalance(currentaccount);
+  }
 
-
-
-
+});
 
 
 
