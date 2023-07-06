@@ -107,9 +107,34 @@ console.log(accounts);
 const calcprintbalance=function(movements)
 {
   const balance=movements.reduce((acc,mov)=>acc+mov,0);
-  labelBalance.textContent=`${balance} EUR`;
+  labelBalance.textContent=`${balance} €`;
 }
 // calcprintbalance(account1.movements);
+
+
+//displaying all summary
+const calcdisplaysummary=function(movements)
+{
+  const incomes=movements.filter(mov=>mov>0).reduce((acc,mov)=>acc+mov,0);
+  labelSumIn.textContent=`${incomes}€`;
+
+
+  const out=movements.filter(mov=>mov<0).reduce((acc,mov)=>acc+mov,0);
+  labelSumOut.textContent=`${Math.abs(out)}€`;
+
+  const interest=movements.filter(mov=>mov>0).map(deposit=>(deposit*1.2)/100).filter((int,i,arr)=>
+  {
+    console.log(arr);
+    return int>=1;
+  })
+  .reduce((acc,int)=>acc+int,0);
+  labelSumInterest.textContent=`${Math.abs(interest)}€`;
+};
+
+calcdisplaysummary(account1.movements);
+
+
+
 
 
 let currentaccount;
@@ -145,6 +170,8 @@ btnLogin.addEventListener('click',function(e)
 
 
 });
+
+
 
 
 
@@ -240,14 +267,14 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // });
 
 
-const eurotousd=1.1;
-const movementsUSD=movements.map(function(mov)
-{
-  return mov*eurotousd;
-});
+// const eurotousd=1.1;
+// const movementsUSD=movements.map(function(mov)
+// {
+//   return mov*eurotousd;
+// });
 
-console.log(movements);
-console.log(movementsUSD);
+// console.log(movements);
+// console.log(movementsUSD);
 
 // const movementsusd=[];
 // for(const mov of movements)
@@ -271,3 +298,11 @@ const withdrawal=movements.filter(function(mov)
 console.log(withdrawal);
 
 
+const eurotousd=1.1;
+//PIPELINE
+
+const totalDepositsUSD=movements
+.filter(mov=>mov>0)
+.map(mov=>mov*eurotousd)
+.reduce((acc,mov)=>acc+mov,0)//only deposits
+console.log(totalDepositsUSD);
