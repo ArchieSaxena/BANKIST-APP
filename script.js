@@ -425,6 +425,8 @@ btnLoan.addEventListener('click',function(e)
   {
     // add movement
     currentaccount.movements.push(amount);
+
+    currentaccount.movementsDates.push(new Date().toISOString());
     //update UI
 
     //display movements
@@ -445,31 +447,10 @@ let sorted=false;
 btnSort.addEventListener('click',function(e)
 {
   e.preventDefault();
-  displayMovements(currentaccount.movements,!(sorted));
+  displayMovements(currentaccount,!(sorted));
   sorted=!sorted;
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
 
 // const currencies = new Map([
 //   ['USD', 'United States dollar'],
@@ -546,7 +527,6 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // console.log(movementsusd);
 
 
-
 const deposits=movements.filter(function(mov)
 {
   return mov>0;
@@ -568,3 +548,17 @@ const totalDepositsUSD=movements
 .map(mov=>mov*eurotousd)
 .reduce((acc,mov)=>acc+mov,0)//only deposits
 console.log(totalDepositsUSD);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
