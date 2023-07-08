@@ -1,2 +1,2 @@
 # Bankist-app
-bankist-app-a560.netlify.app
+https://bankist-app-a560.netlify.app/
