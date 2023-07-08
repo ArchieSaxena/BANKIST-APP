@@ -18,7 +18,7 @@ html {
 body {
   font-family: "Poppins", sans-serif;
   color: #444;
-  background-color: rgb(202, 199, 199);
+  background-color: rgb(201, 202, 199);
   height: 100vh;
   padding: 2rem;
 }
@@ -194,7 +194,7 @@ nav {
 }
 
 .summary__value--out {
-  color: #f5465d;
+  color: red;
 }
 
 .btn--sort {
@@ -214,19 +214,20 @@ nav {
 }
 
 .operation--transfer {
-  background-image: linear-gradient(to top left, #ffb003, #ffcb03);
+  background-image: linear-gradient(to top left,#d49f2b, #ffcb03);
 }
 
 .operation--loan {
-  background-image: linear-gradient(to top left, #39b385, #9be15d);
+  background-image: linear-gradient(to top left, #409474, #9be15d);
 }
 
 .operation--close {
-  background-image: linear-gradient(to top left, #e52a5a, #ff585f);
+  background-image: linear-gradient(to top left,rgb(207, 107, 107), #dd5d64);
 }
 
 h2 {
   margin-bottom: 1.5rem;
+  font-style: "Monaco";
   font-size: 1.7rem;
   font-weight: 600;
   color: #333;

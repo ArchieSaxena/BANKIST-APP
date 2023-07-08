@@ -37,7 +37,7 @@
 
 
 const account1 = {
-  owner: "Jonas Schmedtmann",
+  owner: "Archie Saxena",
   movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
   interestRate: 1.2, // %
   pin: 1111,
@@ -57,14 +57,52 @@ const account1 = {
 };
 
 const account2 = {
-  owner: "Jessica Davis",
+  owner: "Sanchit Jain",
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
 
   movementsDates: [
     "2019-11-01T13:15:33.035Z",
+    "2019-11-28T09:48:16.867Z",
+    "2019-12-25T06:04:23.907Z",
+    "2020-01-25T14:18:46.235Z",
+    "2020-02-05T16:33:06.386Z",
+    "2020-04-10T14:43:26.374Z",
+    "2020-06-05T18:49:59.371Z",
+    "2020-07-26T12:01:20.894Z",
+  ],
+  currency: "USD",
+  locale: "en-US",
+};
+const account3 = {
+  owner: "Drishti Yadav",
+  movements: [900, 3400, -150, -90, -3010, -1000, 800, -10],
+  interestRate: 1.5,
+  pin: 2222,
+
+  movementsDates: [
+    "2019-11-01T13:15:33.035Z",
     "2019-11-30T09:48:16.867Z",
+    "2019-12-23T06:04:23.907Z",
+    "2020-01-25T14:18:46.235Z",
+    "2020-02-05T16:33:06.386Z",
+    "2020-04-10T14:43:26.374Z",
+    "2020-06-25T18:49:59.371Z",
+    "2020-07-26T12:01:20.894Z",
+  ],
+  currency: "USD",
+  locale: "en-US",
+};
+const account4 = {
+  owner: "Manasvi Das",
+  movements: [5000, 3400, -150, -770, -3210, -100, 850, -30],
+  interestRate: 1.5,
+  pin: 2222,
+
+  movementsDates: [
+    "2019-11-01T13:15:33.035Z",
+    "2019-12-30T09:48:16.867Z",
     "2019-12-25T06:04:23.907Z",
     "2020-01-25T14:18:46.235Z",
     "2020-02-05T16:33:06.386Z",
@@ -75,7 +113,7 @@ const account2 = {
   currency: "USD",
   locale: "en-US",
 };
-const accounts = [account1, account2];
+const accounts = [account1, account2,account3,account4];
 
 // const accounts = [account1, account2, account3, account4];
 
@@ -186,7 +224,7 @@ const calcdisplaysummary=function(movements)
 
 
   const out=movements.filter(mov=>mov<0).reduce((acc,mov)=>acc+mov,0);
-  labelSumOut.textContent=`${Math.abs(out)}€`;
+  labelSumOut.textContent=`${Math.trunc(Math.abs(out))}€`;
 
   const interest=movements.filter(mov=>mov>0).map(deposit=>(deposit*1.2)/100).filter((int,i,arr)=>
   {
@@ -194,19 +232,49 @@ const calcdisplaysummary=function(movements)
     return int>=1;
   })
   .reduce((acc,int)=>acc+int,0);
-  labelSumInterest.textContent=`${Math.abs(interest)}€`;
+  labelSumInterest.textContent=`${Math.trunc(Math.abs(interest))}€`;
 };
 
 calcdisplaysummary(account1.movements);
 
+const startLogOutTimer=function()
+{
+  const tick=function()
+  {
 
+    const min=String(Math.trunc(time/60)).padStart(2,0);
+    const sec=String(time%60).padStart(2,0);
+    //in each call print the reamining to UI
+    labelTimer.textContent=`${min}:${sec}`;
+
+    //decrease 1 sec
+    time--;
+
+    //when 0 seconds log out
+    if(time===0)
+    {
+      clearInterval(timer);
+      labelWelcome.textContent=`Log in to get Started`;
+      containerApp.style.opacity=0;
+
+    }
+  };
+  //set timer in 5min
+  let time=300;
+
+  //call the timer every second
+  tick;
+  const timer=setInterval(tick,1000);
+  return timer;
+  
+};
 
 //EVENT HANDLER
-let currentaccount;
+let currentaccount,timer;
 
-currentaccount=account1;
-updateUI(currentaccount);
-containerApp.style.opacity=100;
+// currentaccount=account1;
+// updateUI(currentaccount);
+// containerApp.style.opacity=100;
 
 const now=new Date();
 const day=`${now.getDate()}`.padStart(2,0);
@@ -224,7 +292,7 @@ btnLogin.addEventListener('click',function(e)
   currentaccount=accounts.find(acc=>acc.username===inputLoginUsername.value);
   console.log(currentaccount);
 
-  if(currentaccount.pin===Number(inputLoginPin.value))
+  if(currentaccount?.pin===Number(inputLoginPin.value))
   {
     console.log('LOGIN');
 
@@ -235,6 +303,30 @@ btnLogin.addEventListener('click',function(e)
     // inputLoginUsername=inputLoginPin='';
     inputLoginPin.blur();
 
+
+    // Create current date and time
+    const now = new Date();
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+      // weekday: 'long',
+    };
+    // const locale = navigator.language;
+    // console.log(locale);
+
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentaccount.locale,
+      options
+    ).format(now);
+
+
+    
+
+    if(timer) clearInterval(timer);
+    timer=startLogOutTimer();
     //display movements
     displayMovements(currentaccount);
 
