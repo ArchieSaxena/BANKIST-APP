@@ -143,6 +143,27 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+
+const formatMovementDate = function (date) {
+  const calcDaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const daysPassed = calcDaysPassed(new Date(), date);
+  console.log(daysPassed);
+
+  if (daysPassed === 0) return "Today";
+  if (daysPassed === 1) return "Yesterday";
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+  else{
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  
+  // return new Intl.DateTimeFormat(locale).format(date);
+};
+
 const displayMovements=function(acc,sort=false)
 {
   containerMovements.innerHTML='';
@@ -153,10 +174,7 @@ const displayMovements=function(acc,sort=false)
   {
     
     const date=new Date(acc.movementsDates[i]);
-    const day=`${date.getDate()}`.padStart(2,0);
-    const month=`${date.getMonth()+1}`.padStart(2,0);
-    const year=date.getFullYear();
-    const displayDate=`${day}/${month}/${year}`;
+    const displayDate=formatMovementDate(date,acc.locale);
     const type= mov> 0 ? 'deposit' : 'withdrawal';
     
     const html=`
@@ -343,32 +361,35 @@ btnLogin.addEventListener('click',function(e)
 });
 
 
-btnTransfer.addEventListener('click',function(e)
-{
+btnTransfer.addEventListener("click", function (e) {
   e.preventDefault();
-  const amount=Number(inputTransferAmount.value);
-  const recieveraccount=accounts.find(acc=>acc.username===inputTransferTo.value);
-  console.log(amount,recieveraccount);
+  const amount = +inputTransferAmount.value;
+  const receiveraccount = accounts.find(
+    (acc) => acc.username === inputTransferTo.value
+  );
+  inputTransferAmount.value = inputTransferTo.value = "";
 
-  inputTransferTo.value=inputTransferTo.value=' ';
-  if(amount>0 && currentaccount.balance>=amount && recieveraccount?.username !== currentaccount.username)
-  {
-    console.log('transfer valid');
+  if (
+    amount > 0 &&
+    receiveraccount &&
+    currentaccount.balance >= amount &&
+    receiveraccount?.username !== currentaccount.username
+  ) {
+    // Doing the transfer
     currentaccount.movements.push(-amount);
-    recieveraccount.movements.push(amount);
+    receiveraccount.movements.push(amount);
 
-        //display movements
-        displayMovements(currentaccount);
+    // Add transfer date
+    currentaccount.movementsDates.push(new Date().toISOString());
+    receiveraccount.movementsDates.push(new Date().toISOString());
 
+    // Update UI
+    updateUI(currentaccount);
 
-        //display balance
-        calcDisplayBalance(currentaccount);
-    
-        //displaying summary
-        // calcdisplaysummary(currentaccount.movements);
-        calcDisplayBalance(currentaccount);
+    // Reset timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
-
 });
 
 btnClose.addEventListener('click', function (e) {
